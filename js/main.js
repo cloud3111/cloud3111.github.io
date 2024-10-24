@@ -709,13 +709,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * 網頁運行時間
+   * 网页运行时间
    */
+  // const addRuntime = () => {
+  //   const $runtimeCount = document.getElementById('runtimeshow')
+  //   if ($runtimeCount) {
+  //     const publishDate = $runtimeCount.getAttribute('data-publishDate')
+  //     $runtimeCount.textContent = `${btf.diffDate(publishDate)} ${GLOBAL_CONFIG.runtime}`
+  //   }
+  // }
   const addRuntime = () => {
     const $runtimeCount = document.getElementById('runtimeshow')
     if ($runtimeCount) {
-      const publishDate = $runtimeCount.getAttribute('data-publishDate')
-      $runtimeCount.textContent = `${btf.diffDate(publishDate)} ${GLOBAL_CONFIG.runtime}`
+      // 设置固定的发布日期为2024年10月23日 00:00:00
+      const publishDate = '2024-10-23 00:00:00';
+      $runtimeCount.textContent = `${btf.diffDate(publishDate)} ${GLOBAL_CONFIG.runtime}`;
     }
   }
 
