@@ -1,0 +1,305 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>深入理解注解 | 朝圣者</title><meta name="author" content="cloud3111"><meta name="copyright" content="cloud3111"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="凡心所向🚀素履所往 🌟生如逆旅 ✨一苇以航  1.什么是注解 注解和注释不同,当编译器运行时,注释会被跳过, 而注解不会,反而会反过来影响程序 如:Tomcat, 编译器, 框架 通过直接描述代码的行为来告诉框架或编译器应该做什么 注解通常与反射机制结合使用，通过反射来在运行时获取注解信息，从而根据注解内容执行特定逻辑  2.注解的作用 标识 类:  当程序启动时,扫描所有类的时候, 标识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解注解">
+<meta property="og:url" content="https://cloud3111.github.io/2024/11/01/annotation/index.html">
+<meta property="og:site_name" content="朝圣者">
+<meta property="og:description" content="凡心所向🚀素履所往 🌟生如逆旅 ✨一苇以航  1.什么是注解 注解和注释不同,当编译器运行时,注释会被跳过, 而注解不会,反而会反过来影响程序 如:Tomcat, 编译器, 框架 通过直接描述代码的行为来告诉框架或编译器应该做什么 注解通常与反射机制结合使用，通过反射来在运行时获取注解信息，从而根据注解内容执行特定逻辑  2.注解的作用 标识 类:  当程序启动时,扫描所有类的时候, 标识">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud3111.github.io/img/2.png">
+<meta property="article:published_time" content="2024-11-01T12:48:29.000Z">
+<meta property="article:modified_time" content="2024-11-02T02:40:04.745Z">
+<meta property="article:author" content="cloud3111">
+<meta property="article:tag" content="Annotation">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud3111.github.io/img/2.png"><link rel="shortcut icon" href="/img/favicon.con"><link rel="canonical" href="https://cloud3111.github.io/2024/11/01/annotation/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '深入理解注解',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-02 10:40:04'
+}</script><link rel="stylesheet" href="/css/custom.css" ><link rel="stylesheet" href="https://cdn1.tianli0.top/npm/element-ui@2.15.6/packages/theme-chalk/lib/index.css"><link rel="stylesheet" href="//at.alicdn.com/t/c/font_4731132_iszqpgyzd2q.css" ><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/view1.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/github.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw iconfont icon-xiangji"></i><span> 图库</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><i class="fa-fw iconfont icon-fenlei"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/2.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/Smile.png" alt="Logo"><span class="site-name">朝圣者</span></a><a class="nav-page-title" href="/"><span class="site-name">深入理解注解</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw iconfont icon-xiangji"></i><span> 图库</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><i class="fa-fw iconfont icon-fenlei"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">深入理解注解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-01T12:48:29.000Z" title="发表于 2024-11-01 20:48:29">2024-11-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-02T02:40:04.745Z" title="更新于 2024-11-02 10:40:04">2024-11-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p> 凡心所向🚀素履所往 🌟生如逆旅 ✨一苇以航</p>
+</blockquote>
+<h2 id="1-什么是注解"><a href="#1-什么是注解" class="headerlink" title="1.什么是注解"></a>1.什么是注解</h2><ul>
+<li>注解和注释不同,当编译器运行时,注释会被跳过,</li>
+<li>而注解不会,反而会反过来影响程序 如:Tomcat, 编译器, 框架</li>
+<li>通过直接描述代码的行为来告诉框架或编译器应该做什么</li>
+<li>注解通常与<strong>反射机制</strong>结合使用，通过反射来在运行时获取注解信息，从而根据注解内容执行特定逻辑</li>
+</ul>
+<h2 id="2-注解的作用"><a href="#2-注解的作用" class="headerlink" title="2.注解的作用"></a>2.注解的作用</h2><ul>
+<li>标识 类:  当程序启动时,扫描所有类的时候, 标识当前类为… 例如:@WebServlet用来标识当前类为Servlet, 并管理类的生命周期(启动,运行,销毁)</li>
+<li>赋予 类:  标识类时赋予类的作用时间(RUNTIME)   Spring 使用注解来自动配置 Bean(使bean在程序执行运行时return唯一实例)</li>
+<li>调用 类:  本身不做实现, 利用反射, 比如加了一个运行时注解, 那这个程序就会在运行时被执行, 而不用去创建实例对象.方法</li>
+<li>标识方法的过程解析: 遍历所有方法 找到被标识的方法 反射执行</li>
+</ul>
+<h2 id="3-注解的组成"><a href="#3-注解的组成" class="headerlink" title="3.注解的组成"></a>3.注解的组成</h2><p>指定两个元注解:@Target and @Retention</p>
+<p>@Target     指定注解的作用对象</p>
+<ul>
+<li><p>@ElementType :</p>
+<ul>
+<li><p>ElementType.TYPE        类 接口</p>
+<ul>
+<li><p>ElementType.METHOD   方法(成员方法)</p>
+</li>
+<li><p>ElementType.FIELD       属性(成员变量)</p>
+</li>
+<li><p>ElementTYPE.CONSTRCTRUE    构造器</p>
+</li>
+<li><p>ElementTYPE.PACKAGE        包</p>
+</li>
+<li><p>ElementTYPE.ANNOTATION      注解</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>@RetentionPolicy:    指定注解的作用域<ul>
+<li>RetentionPolicy.SOURCE     源代码级别，由编译器处理，处理之后就不再保留</li>
+<li>RetentionPolicy.CLASS        注解信息保留到类对应的字节码文件中</li>
+<li>RetentionPolicy.RUNTIME    由JVM(解释器)读取，运行时使用</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-例子"><a href="#4-例子" class="headerlink" title="4.例子"></a>4.例子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 作用: 标识类方法,反射调用类方法执行</span></span><br><span class="line"><span class="meta">@Target(ElementType.METHOD)</span> </span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> InitMethod &#123; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">testAnnotation</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@InitMethod</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">ImMethod</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;我在没有实例化的情况下启动了&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        Class&lt;?&gt; clazz = Class.forName(<span class="string">&quot;com.function.testAnnotation&quot;</span>);</span><br><span class="line">        Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor();</span><br><span class="line">        <span class="type">Object</span> <span class="variable">instance</span> <span class="operator">=</span> constructor.newInstance();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 标识方法的过程解析: 遍历所有方法 找到被标识的方法 反射执行</span></span><br><span class="line">        Method[] methods = clazz.getDeclaredMethods();</span><br><span class="line">        <span class="comment">// 查证方法是否有这个注解存在</span></span><br><span class="line">        System.out.println(<span class="string">&quot;方法名: 是否存在注解&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (Method method : methods) &#123;</span><br><span class="line">            <span class="type">boolean</span> <span class="variable">present</span> <span class="operator">=</span> method.isAnnotationPresent(InitMethod.class);</span><br><span class="line">            System.out.println(method.getName() + <span class="string">&quot;: &quot;</span> + present);</span><br><span class="line">            <span class="comment">// 如果存在,反射执行</span></span><br><span class="line">            <span class="keyword">if</span> (present) &#123;</span><br><span class="line">                method.invoke(instance);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-补充"><a href="#5-补充" class="headerlink" title="5.补充"></a>5.补充</h2><ul>
+<li><p><code>AnnotatedElement</code> 接口是 Java 反射 API 中的一个关键接口，用于操作和读取注解。它由 <code>Class</code>、<code>Method</code>、<code>Field</code> 等类实现，允许在<strong>运行时检查注解信息</strong>。<code>AnnotatedElement</code> 的接口方法使得我们可以在运行时灵活地检查并获取注解的详细信息，从而决定如何动态处理类、方法或字段。</p>
+</li>
+<li><p>Spring 就大量使用了这一模式：扫描注解来注入依赖、管理事务、控制请求等。</p>
+</li>
+<li><pre><code class="lang-java">// 也是利用反射
+Class clazz = testAnnotation.class;
+Annotation annotation = clazz.getAnnotation(InitMethod.class);
+if (deprecatedAnnotation != null) &#123;
+    System.out.println(&quot;该类已被标记为过时&quot;);
+&#125;
+// 或者
+Annotation[] annotations = clazz.getAnnotations();
+for (Annotation annotation : annotations) &#123;
+    System.out.println(&quot;注解类型: &quot; + annotation.annotationType().getName());
+&#125;
+</code></pre>
+<p><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/1730470596791view23.png" alt="1730470596791view23.png"></p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://cloud3111.github.io">cloud3111</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://cloud3111.github.io/2024/11/01/annotation/">https://cloud3111.github.io/2024/11/01/annotation/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://cloud3111.github.io" target="_blank">朝圣者</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Annotation/">Annotation</a></div><div class="post-share"><div class="social-share" data-image="/img/2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2024/10/30/front001/" title="前端心得"><img class="cover" src="/img/view9.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">前端心得</div></div><div class="info-2"><div class="info-item-1">序言​    在写这个心得之前，我内心充满了复杂的情绪，因为写心得对我这个散漫成性的人来说，无疑是一项重大的挑战，哈哈。    关于这个项目：“前端通用系统”，听起来颇具吸引力，但细究下来会发现，它缺乏明确的目的性和定位。我是一名个人练习生  不不不 串台了 我是一名主学后端的开发者 , 虽然系统学习前端项目对我来说并不是那么重要，但出于对前端的兴趣和对知识的好奇心，我还是想试试看。    说白了，就是有一天我突然产生了想学习前端的念头，这个念头一经冒出，便引起了世界的广泛关注，大型纪录片持续为您播出……哈哈，又偏题了… 不说那么多废话了，我们直接分析这个项目吧。(嗯哼嗯哼!!  我是小白别喷我 即使我有多菜鸟) 初识 技术栈: Vue3 + Vite + Axios +ElementPlus + Mock  一个很典型的前端框架, 但对于我来说只能说道阻且长  毕竟我还是0开发哦   想要了解这个项目 首先得了解Vue3的特性: 自定义组件, 库函数和挂载  vue项目都会有一个入口main.js文件 =&gt; 其中一个作用就是创建一个主组件实例  ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/github.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cloud3111</div><div class="author-info-description">我怜雪的洁白,却不喜冬日的寒冷</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cloud3111"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我说过 我不闪躲 我非要这么做 讲不听也偏要爱 更努力爱 让你明白 没有别条路能走 你决定要不要陪我 讲不听偏爱 看我感觉爱 等你的依赖~~</div></div><div class="card-widget" id="newYear"><div class="item-headline"><i></i><span></span></div><div class="item-content"><div id="newYear-main"><div class="mask"></div> <p class="title"></p> <div class="newYear-time"></div> <p class="today" style="text-align: right;"></p> </div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%A8%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">1.什么是注解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">2.注解的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%B3%A8%E8%A7%A3%E7%9A%84%E7%BB%84%E6%88%90"><span class="toc-number">3.</span> <span class="toc-text">3.注解的组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BE%8B%E5%AD%90"><span class="toc-number">4.</span> <span class="toc-text">4.例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%A1%A5%E5%85%85"><span class="toc-number">5.</span> <span class="toc-text">5.补充</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/11/01/annotation/" title="深入理解注解"><img src="/img/2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="深入理解注解"/></a><div class="content"><a class="title" href="/2024/11/01/annotation/" title="深入理解注解">深入理解注解</a><time datetime="2024-11-01T12:48:29.000Z" title="发表于 2024-11-01 20:48:29">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/30/front001/" title="前端心得"><img src="/img/view9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端心得"/></a><div class="content"><a class="title" href="/2024/10/30/front001/" title="前端心得">前端心得</a><time datetime="2024-10-30T11:00:54.000Z" title="发表于 2024-10-30 19:00:54">2024-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/30/frontEndDebug/" title="前后端联调"><img src="/img/2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前后端联调"/></a><div class="content"><a class="title" href="/2024/10/30/frontEndDebug/" title="前后端联调">前后端联调</a><time datetime="2024-10-30T07:52:02.000Z" title="发表于 2024-10-30 15:52:02">2024-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/23/Nginx/" title="Nginx配置解析"><img src="/img/view9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx配置解析"/></a><div class="content"><a class="title" href="/2024/10/23/Nginx/" title="Nginx配置解析">Nginx配置解析</a><time datetime="2024-10-23T03:29:59.000Z" title="发表于 2024-10-23 11:29:59">2024-10-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/view.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 By cloud3111</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script src="https://cdn.staticfile.org/jquery/3.6.3/jquery.min.js"></script><script async data-pjax src="https://cdn.wpon.cn/2022-sucai/Gold-ingot.js"></script><script async data-pjax src="/js/newYear.js"></script><script async src="https://cdn1.tianli0.top/npm/vue@2.6.14/dist/vue.min.js"></script><script async src="https://cdn1.tianli0.top/npm/element-ui@2.15.6/lib/index.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" data-title="本站采用多线部署，主线路托管于Vercel" title=""><img src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=flat&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="https://dashboard.4everland.org/index_generator" style="margin-inline:5px" data-title="本站采用多线部署，备用线路托管于4EVERLAND" title=""><img src="https://img.shields.io/badge/Hosted-4EVERLAND-22DDDD?style=flat&amp;logo=IPFS" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":200,"height":350},"mobile":{"show":true},"log":false});</script></body></html>
