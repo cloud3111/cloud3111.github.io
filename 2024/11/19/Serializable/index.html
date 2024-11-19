@@ -1,0 +1,325 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>逻辑与物理序列化 | 朝圣者</title><meta name="author" content="cloud3111"><meta name="copyright" content="cloud3111"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="逻辑与物理序列化🤔💬如果一个人不知道要驶向哪一个码头, 那么任何风都不会是顺风  一.序列化和反序列化的区别逻辑序列化:    对象    -&gt;     JSON 物理序列化     JSON    -&gt;    字节  序列化是将 对象 转化成 字节 存储在磁盘(Redis的数据就是放在磁盘上)  反序列化是读取磁盘 将字节 转化成 对象 当然不只是磁盘, 因为是字节, 所以当成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="逻辑与物理序列化">
+<meta property="og:url" content="https://cloud3111.github.io/2024/11/19/Serializable/index.html">
+<meta property="og:site_name" content="朝圣者">
+<meta property="og:description" content="逻辑与物理序列化🤔💬如果一个人不知道要驶向哪一个码头, 那么任何风都不会是顺风  一.序列化和反序列化的区别逻辑序列化:    对象    -&gt;     JSON 物理序列化     JSON    -&gt;    字节  序列化是将 对象 转化成 字节 存储在磁盘(Redis的数据就是放在磁盘上)  反序列化是读取磁盘 将字节 转化成 对象 当然不只是磁盘, 因为是字节, 所以当成">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud3111.github.io/img/3.png">
+<meta property="article:published_time" content="2024-11-19T06:52:38.000Z">
+<meta property="article:modified_time" content="2024-11-19T09:27:39.718Z">
+<meta property="article:author" content="cloud3111">
+<meta property="article:tag" content="Serializable">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud3111.github.io/img/3.png"><link rel="shortcut icon" href="/img/favicon.con"><link rel="canonical" href="https://cloud3111.github.io/2024/11/19/Serializable/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '逻辑与物理序列化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-19 17:27:39'
+}</script><link rel="stylesheet" href="/css/custom.css" ><link rel="stylesheet" href="https://cdn1.tianli0.top/npm/element-ui@2.15.6/packages/theme-chalk/lib/index.css"><link rel="stylesheet" href="//at.alicdn.com/t/c/font_4731132_c8skdswzyl.css" ><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/view1.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/github.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw iconfont icon-shouyeB"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw iconfont icon-yinle"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/movies/"><i class="fa-fw iconfont icon-064-moviesapp"></i><span> 电影</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw iconfont icon-xiangceB"></i><span> 图库</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw iconfont icon-biaoqian"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><i class="fa-fw iconfont icon-fenlei1"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw iconfont icon-wodeB"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/3.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/Smile.png" alt="Logo"><span class="site-name">朝圣者</span></a><a class="nav-page-title" href="/"><span class="site-name">逻辑与物理序列化</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw iconfont icon-shouyeB"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw iconfont icon-yinle"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/movies/"><i class="fa-fw iconfont icon-064-moviesapp"></i><span> 电影</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw iconfont icon-xiangceB"></i><span> 图库</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw iconfont icon-biaoqian"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><i class="fa-fw iconfont icon-fenlei1"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw iconfont icon-wodeB"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">逻辑与物理序列化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-19T06:52:38.000Z" title="发表于 2024-11-19 14:52:38">2024-11-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-19T09:27:39.718Z" title="更新于 2024-11-19 17:27:39">2024-11-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><hr>
+<h1 id="逻辑与物理序列化"><a href="#逻辑与物理序列化" class="headerlink" title="逻辑与物理序列化"></a>逻辑与物理序列化</h1><p>🤔💬如果一个人不知道要驶向哪一个码头, 那么任何风都不会是顺风</p>
+<hr>
+<h2 id="一-序列化和反序列化的区别"><a href="#一-序列化和反序列化的区别" class="headerlink" title="一.序列化和反序列化的区别"></a>一.序列化和反序列化的区别</h2><p><strong>逻辑序列化:    对象    -&gt;     JSON</strong></p>
+<p><strong>物理序列化     JSON    -&gt;    字节</strong></p>
+<ul>
+<li><strong>序列化是将 对象 转化成 字节 存储在磁盘(Redis的数据就是放在磁盘上)</strong> </li>
+<li><strong>反序列化是读取磁盘 将字节 转化成 对象</strong></li>
+<li>当然不只是磁盘, 因为是字节, 所以当成字节流可以在网络中运输</li>
+<li>不同进程/程序间进行远程通信时，可以相互发送各种类型的数据，包括文本、图片、音频、视频等，而这些数据都会以二进制序列(字节流)的形式在网络上传送。</li>
+</ul>
+<h2 id="二-序列化接口和序列化ID"><a href="#二-序列化接口和序列化ID" class="headerlink" title="二.序列化接口和序列化ID"></a>二.序列化接口和序列化ID</h2><ul>
+<li><p>只有实现了Serializable或者Externalizable接口的类的对象才能被序列化为字节序列</p>
+</li>
+<li><p>序列化类的属性没有实现 Serializable 那么在序列化就会报错: NotSerializableException</p>
+</li>
+<li><p>java的序列化机制是通过判断运行时类的serialVersionUID来验证版本一致性的，在进行反序列化时，JVM会把传进来的字节流中的serialVersionUID与本地实体类中的serialVersionUID进行比较，如果相同则认为是一致的，便可以进行反序列化，否则就会报序列化版本不一致的异常。</p>
+</li>
+<li><p>步骤:</p>
+<ul>
+<li><p>若User类仅仅实现了Serializable接口定义了自己的序列化id, 则可以按照以下方式进行序列化和反序列化。</p>
+</li>
+<li><p>ObjectOutputStream采用默认的序列化方式，对User对象的非transient的实例变量进行序列化。</p>
+</li>
+<li><p>ObjcetInputStream采用默认的反序列化方式，对对User对象的非transient的实例变量进行反序列化。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="三-序列化器"><a href="#三-序列化器" class="headerlink" title="三.序列化器"></a>三.序列化器</h2><ul>
+<li><strong>网络直接传输数据，但是无法直接传输Json对象或者XML对象，必须在传输前序列化，传输完成后反序列化成对象。</strong></li>
+<li><strong>网络底层只能识别和传输二进制数据。无论是 JSON、XML，还是 Java 对象，这些高层次的数据结构都需要转化为字节序列才能传输。</strong></li>
+<li>所以所有可在网络上传输的对象都必须是可序列化的。</li>
+<li>springboot中是通过Jackson的<strong>objectMapper序列化器</strong>来实现序列化和反序列化的, 并不依赖java原生序列化接口<ul>
+<li>Jackson 通过<strong>反射读取类的字段</strong>。</li>
+<li>利用 <code>ObjectMapper</code> 序列化为 JSON 或反序列化为 Java 对象。</li>
+<li>与传统的 Java 序列化不同，Jackson 不依赖 <code>Serializable</code> 接口。</li>
+</ul>
+</li>
+</ul>
+<h2 id="四-自定义序列化器"><a href="#四-自定义序列化器" class="headerlink" title="四.自定义序列化器"></a>四.自定义序列化器</h2><ul>
+<li><p>@JsonFormat</p>
+<ul>
+<li>Jackson 在处理对象转 JSON 时，会使用字段的默认序列化器</li>
+<li><p>Jackson 在序列化和反序列化时会扫描字段上的注解</p>
+</li>
+<li><p>如果字段上有 <code>@JsonFormat</code> 注解，Jackson 会为该字段生成一个自定义的序列化器。</p>
+</li>
+<li><p>这个序列化器会按照 <code>@JsonFormat</code> 指定的格式（例如 <code>pattern</code> 和 <code>timezone</code>）格式化数据。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="五-几种Json与字符串换转工具"><a href="#五-几种Json与字符串换转工具" class="headerlink" title="五.几种Json与字符串换转工具"></a>五.几种Json与字符串换转工具</h2><ul>
+<li><strong>概念理解: 序列化是比较宽泛的词, 将普通字符串转换为JSON格式字符串也可以叫序列化</strong><ul>
+<li>Gson 是 Google 开源的 JSON 库</li>
+<li>FastJSON 是阿里巴巴开源的高性能 JSON 处理库</li>
+<li>Jackson 是 Spring 框架默认集成的 JSON 序列化工具(SpringMVC 转换默认使用 Jackson)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//      3种将实体类对象转化成json格式的字符串方法</span></span><br><span class="line">        <span class="type">Object</span> <span class="variable">heike</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HeiKe</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//第一种：谷歌旗下的gson</span></span><br><span class="line">        <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">json1</span> <span class="operator">=</span> gson.toJson(heike);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//第二种：阿里巴巴的fastJson</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">json2</span> <span class="operator">=</span> JSONObject.toJSONString(heike);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//第三种：spring框架的jackJson   </span></span><br><span class="line">        <span class="type">ObjectMapper</span> <span class="variable">mapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">json3</span> <span class="operator">=</span> mapper.writeValueAsString(heike);</span><br><span class="line"></span><br><span class="line">        System.out.println(json1);</span><br><span class="line">        System.out.println(json2);</span><br><span class="line">        System.out.println(json3);</span><br><span class="line"></span><br><span class="line"><span class="comment">//         3种将JSON字符串转换为对象</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//第一种：谷歌旗下的gson</span></span><br><span class="line">        gson.fromJson(json1, HeiKe.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//第二种：fastJson</span></span><br><span class="line">        JSON.parseObject(json2, HeiKe.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//第三种：jackJson</span></span><br><span class="line">        mapper.readValue(json3, HeiKe.class);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/17320061339471732006133927.png" alt="17320061339471732006133927.png"></p>
+<h2 id="六-Redis序列化器"><a href="#六-Redis序列化器" class="headerlink" title="六.Redis序列化器"></a>六.Redis序列化器</h2><ul>
+<li><code>RedisTemplate</code> 是 Spring 提供的用于操作 Redis 的<strong>工具类</strong></li>
+<li>通过 <strong><code>RedisConnectionFactory</code></strong> 来建立 Redis 连接。</li>
+<li><strong>对不同的数据类型存放容器采取不同序列化器</strong></li>
+<li>使用 <code>Jackson2JsonRedisSerializer</code> 将 Java 对象序列化为 JSON 格式的字符串，并存入 Redis (有意思: 2==to)</li>
+<li>流程: <strong>一般采用反射在执行前</strong></li>
+<li><strong>Key 序列化</strong><ul>
+<li><strong>String 类型 key</strong>（常见）：使用 <code>StringRedisSerializer</code> 将 key 序列化为 UTF-8 编码的字节流。</li>
+<li>如果 key 是对象类型（不常见），需要用 <code>Jackson2JsonRedisSerializer</code> 或 <code>JdkSerializationRedisSerializer</code> 等将对象序列化为 Redis 存储格式（最终是字节流）。</li>
+</ul>
+</li>
+<li><strong>Value 序列化</strong><ul>
+<li>对象类型的 value 通常需要两步：<ul>
+<li><strong>JSON 转换</strong>（逻辑序列化）：例如用 <code>Jackson</code> 或 <code>Gson</code> 将对象序列化为 JSON 字符串。</li>
+<li><strong>字节流转换</strong>（物理序列化）：例如用 <code>UTF-8</code> 编码将 JSON 字符串转换为字节流。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>注意: <strong>Redis 的原生序列化器</strong>是 <strong>JDK 序列化机制</strong>，即通过 Java 的 <code>Serializable</code> 接口进行序列化和反序列化。JDK 将对象转换为字节 存到Redis. (序列化器名字: <strong>JdkSerializationRedisSerializer</strong> )</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> RedisTemplate&lt;String, Object&gt; <span class="title function_">redisTemplate</span><span class="params">(RedisConnectionFactory factory)</span> &#123;</span><br><span class="line">    <span class="comment">// 实例化自己的RedisTemplate</span></span><br><span class="line">    RedisTemplate&lt;String, Object&gt; template = <span class="keyword">new</span> <span class="title class_">RedisTemplate</span>&lt;String, Object&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 设置使用连接工厂连接</span></span><br><span class="line">    template.setConnectionFactory(factory);</span><br><span class="line">    </span><br><span class="line">    <span class="type">Jackson2JsonRedisSerializer</span> <span class="variable">jacksonToJsonRedisSerializer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jackson2JsonRedisSerializer</span>(Object.class);</span><br><span class="line">    <span class="type">ObjectMapper</span> <span class="variable">om</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">    om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">    om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">    jacksonToJsonRedisSerializer.setObjectMapper(om);</span><br><span class="line">    <span class="type">StringRedisSerializer</span> <span class="variable">stringRedisSerializer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringRedisSerializer</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// key采用redis原生的String序列化器</span></span><br><span class="line">    template.setKeySerializer(stringRedisSerializer);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// hash的key也采用redis原生的String序列化器</span></span><br><span class="line">    template.setHashKeySerializer(stringRedisSerializer);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// value序列化方式采用jackson ObjectMapper的序列化器</span></span><br><span class="line">    template.setValueSerializer(jacksonToJsonRedisSerializer);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// hash的value序列化方式采用jackson</span></span><br><span class="line">    template.setHashValueSerializer(jacksonToJsonRedisSerializer);</span><br><span class="line">    </span><br><span class="line">    template.afterPropertiesSet();</span><br><span class="line">    <span class="keyword">return</span> template;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="六-Tips"><a href="#六-Tips" class="headerlink" title="六.Tips"></a>六.Tips</h2><p>问: 将数据存储到数据库要不要经过序列化和反序列化?</p>
+<p>答:  数据库操作直接通过 ORM 框架 或 SQL 将数据与数据库表中的记录映射(mapper)，不涉及 Java 的序列化机制, 如果需要将对象存储为 JSON 格式，可以通过序列化工具（如 Jackson、Gson）将对象转换为 JSON 字符串存储到数据库的对应字段(一般是String )</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://cloud3111.github.io">cloud3111</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://cloud3111.github.io/2024/11/19/Serializable/">https://cloud3111.github.io/2024/11/19/Serializable/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://cloud3111.github.io" target="_blank">朝圣者</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Serializable/">Serializable</a></div><div class="post-share"><div class="social-share" data-image="/img/3.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2024/11/12/doubleTable/" title="Mysql多表的设计"><img class="cover" src="/img/wallpaper/view13.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Mysql多表的设计</div></div><div class="info-2"><div class="info-item-1">深入理解多表关联的数据库设计一.什么是多表关联查询 在mysql中通常对不同表之间设置一个外键(物理和逻辑)  -&gt; 逻辑外键最为适合  为什么是逻辑外键? 在数据库设计中，我们经常会用到外键来维护表与表之间的关系。然而，使用外键有时会带来一些性能和维护上的问题，比如在进行大量插入、删除操作时，外键约束可能会引发锁竞争，影响操作速度。为了克服这些问题，逻辑外键应运而生。     三种多表关联关系  一对一 ：例如user和user_detail的关系，每个用户对应一条详情记录。 一对多：例如user和orders的关系，一个用户可以有多个订单。 多对多：例如setmeal和dish的关系，一个套餐里边可能包含多个菜品，而这一个菜品也可能在多个套餐里面。    二.表设计的关键原则清晰的表结构和字段命名：  表名、字段名尽量简洁清晰，例如 user 表中的 id 字段和 order 表中的 user_id 字段可以直观表明关系。  避免数据冗余：  不重复存储已经存在的信息，使用外键代替冗余数据。例如 order 表通过 user_id 字段关联 user...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/github.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cloud3111</div><div class="author-info-description">我怜雪的洁白,却不喜冬日的寒冷</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cloud3111"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我说过 我不闪躲 我非要这么做 讲不听也偏要爱 更努力爱 让你明白 没有别条路能走 你决定要不要陪我 讲不听偏爱 看我感觉爱 等你的依赖~~</div></div><div class="card-widget" id="newYear"><div class="item-headline"><i></i><span></span></div><div class="item-content"><div id="newYear-main"><div class="mask"></div> <p class="title"></p> <div class="newYear-time"></div> <p class="today" style="text-align: right;"></p> </div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E4%B8%8E%E7%89%A9%E7%90%86%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">逻辑与物理序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.</span> <span class="toc-text">一.序列化和反序列化的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-%E5%BA%8F%E5%88%97%E5%8C%96%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%BA%8F%E5%88%97%E5%8C%96ID"><span class="toc-number">1.2.</span> <span class="toc-text">二.序列化接口和序列化ID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E5%BA%8F%E5%88%97%E5%8C%96%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text">三.序列化器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BA%8F%E5%88%97%E5%8C%96%E5%99%A8"><span class="toc-number">1.4.</span> <span class="toc-text">四.自定义序列化器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94-%E5%87%A0%E7%A7%8DJson%E4%B8%8E%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8D%A2%E8%BD%AC%E5%B7%A5%E5%85%B7"><span class="toc-number">1.5.</span> <span class="toc-text">五.几种Json与字符串换转工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD-Redis%E5%BA%8F%E5%88%97%E5%8C%96%E5%99%A8"><span class="toc-number">1.6.</span> <span class="toc-text">六.Redis序列化器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD-Tips"><span class="toc-number">1.7.</span> <span class="toc-text">六.Tips</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/11/19/Serializable/" title="逻辑与物理序列化"><img src="/img/3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="逻辑与物理序列化"/></a><div class="content"><a class="title" href="/2024/11/19/Serializable/" title="逻辑与物理序列化">逻辑与物理序列化</a><time datetime="2024-11-19T06:52:38.000Z" title="发表于 2024-11-19 14:52:38">2024-11-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/12/doubleTable/" title="Mysql多表的设计"><img src="/img/wallpaper/view13.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Mysql多表的设计"/></a><div class="content"><a class="title" href="/2024/11/12/doubleTable/" title="Mysql多表的设计">Mysql多表的设计</a><time datetime="2024-11-12T12:07:58.000Z" title="发表于 2024-11-12 20:07:58">2024-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/04/spring/" title="spring"><img src="/img/3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="spring"/></a><div class="content"><a class="title" href="/2024/11/04/spring/" title="spring">spring</a><time datetime="2024-11-04T01:25:48.000Z" title="发表于 2024-11-04 09:25:48">2024-11-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/01/annotation/" title="深入理解注解"><img src="/img/2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="深入理解注解"/></a><div class="content"><a class="title" href="/2024/11/01/annotation/" title="深入理解注解">深入理解注解</a><time datetime="2024-11-01T12:48:29.000Z" title="发表于 2024-11-01 20:48:29">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/30/front001/" title="前端心得"><img src="/img/2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端心得"/></a><div class="content"><a class="title" href="/2024/10/30/front001/" title="前端心得">前端心得</a><time datetime="2024-10-30T11:00:54.000Z" title="发表于 2024-10-30 19:00:54">2024-10-30</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/view.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 By cloud3111</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script src="https://cdn.staticfile.org/jquery/3.6.3/jquery.min.js"></script><script async data-pjax src="https://cdn.wpon.cn/2022-sucai/Gold-ingot.js"></script><script async data-pjax src="/js/newYear.js"></script><script async src="https://cdn1.tianli0.top/npm/vue@2.6.14/dist/vue.min.js"></script><script async src="https://cdn1.tianli0.top/npm/element-ui@2.15.6/lib/index.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" data-title="本站采用多线部署，主线路托管于Vercel" title=""><img src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=flat&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="https://dashboard.4everland.org/index_generator" style="margin-inline:5px" data-title="本站采用多线部署，备用线路托管于4EVERLAND" title=""><img src="https://img.shields.io/badge/Hosted-4EVERLAND-22DDDD?style=flat&amp;logo=IPFS" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":200,"height":350},"mobile":{"show":false},"log":false});</script></body></html>
