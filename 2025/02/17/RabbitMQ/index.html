@@ -1,0 +1,316 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>快速入门RabbitMQ | 朝圣者</title><meta name="author" content="cloud3111"><meta name="copyright" content="cloud3111"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="快速入门RabbitMQ什么是消息队列 消息队列(Message Queue)”是在消息的传输过程中保存消息的容器。在消息队列中，通常有生产者和消费者两个角色。生产者只负责发送数据到消息队列,他不管。消费者只负责从消息队列中取出数据处理.消息队列的作用 解耦: rabbitMQ是独立于应用程序之外的一个消息存储的中间件, 所以他不需要对其他应用负责, 只需要将生产者的消息数据进行一个再发传递 异步">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速入门RabbitMQ">
+<meta property="og:url" content="https://cloud3111.github.io/2025/02/17/RabbitMQ/index.html">
+<meta property="og:site_name" content="朝圣者">
+<meta property="og:description" content="快速入门RabbitMQ什么是消息队列 消息队列(Message Queue)”是在消息的传输过程中保存消息的容器。在消息队列中，通常有生产者和消费者两个角色。生产者只负责发送数据到消息队列,他不管。消费者只负责从消息队列中取出数据处理.消息队列的作用 解耦: rabbitMQ是独立于应用程序之外的一个消息存储的中间件, 所以他不需要对其他应用负责, 只需要将生产者的消息数据进行一个再发传递 异步">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud3111.github.io/img/3.png">
+<meta property="article:published_time" content="2025-02-17T02:02:00.000Z">
+<meta property="article:modified_time" content="2025-02-27T13:14:35.564Z">
+<meta property="article:author" content="cloud3111">
+<meta property="article:tag" content="RabbitMQ">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud3111.github.io/img/3.png"><link rel="shortcut icon" href="/img/favicon.con"><link rel="canonical" href="https://cloud3111.github.io/2025/02/17/RabbitMQ/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '快速入门RabbitMQ',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-27 21:14:35'
+}</script><link rel="stylesheet" href="/css/custom.css" ><link rel="stylesheet" href="https://cdn1.tianli0.top/npm/element-ui@2.15.6/packages/theme-chalk/lib/index.css"><link rel="stylesheet" href="//at.alicdn.com/t/c/font_4731132_c8skdswzyl.css" ><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/view1.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/github.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw iconfont icon-shouyeB"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw iconfont icon-yinle"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/movies/"><i class="fa-fw iconfont icon-064-moviesapp"></i><span> 电影</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw iconfont icon-xiangceB"></i><span> 图库</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw iconfont icon-biaoqian"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><i class="fa-fw iconfont icon-fenlei1"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw iconfont icon-wodeB"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/3.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/Smile.png" alt="Logo"><span class="site-name">朝圣者</span></a><a class="nav-page-title" href="/"><span class="site-name">快速入门RabbitMQ</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw iconfont icon-shouyeB"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw iconfont icon-yinle"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/movies/"><i class="fa-fw iconfont icon-064-moviesapp"></i><span> 电影</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw iconfont icon-xiangceB"></i><span> 图库</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw iconfont icon-biaoqian"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><i class="fa-fw iconfont icon-fenlei1"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw iconfont icon-wodeB"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">快速入门RabbitMQ</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-17T02:02:00.000Z" title="发表于 2025-02-17 10:02:00">2025-02-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-27T13:14:35.564Z" title="更新于 2025-02-27 21:14:35">2025-02-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="快速入门RabbitMQ"><a href="#快速入门RabbitMQ" class="headerlink" title="快速入门RabbitMQ"></a>快速入门RabbitMQ</h1><h2 id="什么是消息队列"><a href="#什么是消息队列" class="headerlink" title="什么是消息队列"></a>什么是消息队列</h2><ul>
+<li><strong>消息队列(Message Queue)”是在消息的传输过程中保存消息的容器</strong>。在消息队列中，通常有生产者和消费者两个角色。生产者只负责发送数据到消息队列,他不管。消费者只负责从消息队列中取出数据处理.<h2 id="消息队列的作用"><a href="#消息队列的作用" class="headerlink" title="消息队列的作用"></a>消息队列的作用</h2></li>
+<li>解耦: rabbitMQ是独立于应用程序之外的一个消息存储的中间件, 所以他不需要对其他应用负责, 只需要将生产者的消息数据进行一个再发传递</li>
+<li>异步: <strong>生产者发送消息时</strong>，它并不需要等待消息被消费者处理完，生产者可以立即继续处理其他任务.消费者从队列中取出消息并消费, 但是不需要等待全部消息都被消费才执行其他任务,而是相当于异步线程处理其他消费者信息</li>
+<li>削峰: 假设系统A在某一段时间请求数暴增，有5000个请求发送过来，系统A这时就会发送5000条SQL进入MySQL进行执行，MySQL对于如此庞大的请求当然处理不过来，MySQL就会崩溃，导致系统瘫痪. 这时候可以使用mq对消息进行分段保存, <strong>由消费者每次拉取2000条进行处理</strong><br><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/17406620441921740662044061.png" alt="17406620441921740662044061.png"><h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2></li>
+<li>可靠性。支持持久化，传输确认，发布确认(ack序列码)等保证了MQ的可靠性。</li>
+<li>灵活的分发消息策略。这应该是RabbitMQ的一大特点。在消息进入MQ前由Exchange(交换机)进行路由消息。分发消息策略有：简单模式、工作队列模式、发布订阅模式、路由模式、通配符模式。</li>
+<li>支持集群。多台RabbitMQ服务器可以组成一个集群，形成一个逻辑Broker(代理)。</li>
+<li>多种协议。RabbitMQ支持多种消息队列协议，比如 STOMP、MQTT 等等。</li>
+<li>支持多种语言客户端。RabbitMQ几乎支持所有常用编程语言，包括 Java(amqpTemplate客户端)、.NET、Ruby 等等。</li>
+<li>可视化管理界面。RabbitMQ提供了一个易用的用户界面，使得用户可以监控和管理消息 Broker。(Erlang15672端口程序)<h2 id="概念理解"><a href="#概念理解" class="headerlink" title="概念理解"></a>概念理解</h2></li>
+<li>交换机: 一个重要组件,各自有自己的路由键, 负责接收生产者发送的消息，并根据一定的路由规则（如路由键、绑定等）将消息转发到一个或多个队列  —-&gt; 控制消息的分发规则(交换机是消息的中转站)</li>
+<li>路由键: 帮助交换机决定该消息应该被转发到哪个队列(规则), 是交换机的关键</li>
+<li>队列: 队列是RabbitMQ中的一个存储结构，用于保存消息，直到消费者从队列中获取并处理这些消息。</li>
+<li>虚拟主机: 虚拟主机是RabbitMQ的一个逻辑隔离单位。它允许在同一台RabbitMQ服务器上创建多个隔离的“虚拟环境”，每个虚拟主机有自己独立的交换机、队列和权限控制。</li>
+<li>假设有一个生产者将消息发送到一个<code>direct</code>类型的交换机，该交换机的路由键是<code>&quot;order.processed&quot;</code>。这个交换机会将消息转发到一个与该路由键绑定的队列，比如叫做<code>orderQueue</code>。消费者从<code>orderQueue</code>队列中消费消息。在RabbitMQ的一个虚拟主机中，可能还存在其他队列和交换机，它们的配置和权限互相独立，确保不同应用的消息流不会互相干扰<h2 id="路由键与队列的绑定"><a href="#路由键与队列的绑定" class="headerlink" title="路由键与队列的绑定"></a>路由键与队列的绑定</h2></li>
+<li>直接交换机: 由路由键决定与什么队列绑定</li>
+<li>扇出交换机: 完全不使用路由键，它会将收到的所有消息广播到所有绑定到该交换机的队列</li>
+<li>主题交换机: 主题交换机使用路由键中的通配符（<code>*</code>和<code>#</code>）来进行模式匹配</li>
+<li><p>头交换机: 头交换机并不依赖路由键，而是通过消息头中的属性来进行匹配 </p>
+<p>  队列和交换机之间通过<strong>绑定</strong>关系将路由键与队列联系起来。当生产者发布消息时，交换机会根据消息的路由键与队列的绑定关系，确定该消息应该进入哪个队列。</p>
+<h2 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h2></li>
+<li>存储那些无法被正常消费的消息,通常由交换机和路由键指定到特殊的队列(即死信队列)</li>
+<li><strong>消息过期（Message Expiry）</strong>：如果消息设置了<code>expiration</code>属性，当消息在队列中存放超过指定时间后会被丢弃，并进入死信队列。</li>
+<li><strong>队列溢出</strong>：当队列已满且无法再接收新的消息时，新进入的消息将会被丢弃并进入死信队列。</li>
+<li><strong>消息被拒绝（Reject）</strong>：当消费者拒绝处理某条消息时，可以选择将消息标记为“死信”。这种情况下，消息会进入死信队列。</li>
+<li><strong>消费者未确认（Unacknowledged）</strong>：如果消息被消费者消费后未发送确认（ack），并且RabbitMQ设置了<code>requeue</code>为<code>false</code>，则消息会被丢弃并进入死信队列。<br>要为队列或交换机添加死信参数（Dead Letter Exchange）配置，应该关注以下几个部分：</li>
+</ul>
+<ol>
+<li><p><strong>Dead letter exchange</strong>：这里可以填写死信交换机的名称。当队列中的消息因某种原因（如超时、被拒绝等）不能被消费时，它们将被转发到这个死信交换机。你需要在此输入目标死信交换机的名称。</p>
+</li>
+<li><p><strong>Dead letter routing key</strong>：这是可选的参数，用于指定死信队列的路由键。消息会被转发到死信交换机，并根据路由键路由到相应的队列。你可以填写路由键，或者留空使用默认设置。</p>
+</li>
+</ol>
+<p>在配置过程中，如果你为队列设置了 <strong>Dead letter exchange</strong>，确保死信交换机已经存在，并且设置正确。你还可以根据需求配置其他参数，如 <strong>Message TTL</strong>（消息的过期时间）和 <strong>Auto expire</strong>（队列的过期时间）。</p>
+<h3 id="死信参数添加步骤："><a href="#死信参数添加步骤：" class="headerlink" title="死信参数添加步骤："></a>死信参数添加步骤：</h3><ol>
+<li>在 RabbitMQ 管理界面创建或编辑队列或交换机。</li>
+<li>在 <code>Arguments</code> 部分找到并配置：<ul>
+<li><strong>Dead letter exchange</strong>：填写死信交换机的名称。</li>
+<li><strong>Dead letter routing key</strong>：可选，填写死信路由键的名称。</li>
+</ul>
+</li>
+<li>完成设置后，保存队列或交换机配置。<h3 id="其他相关参数："><a href="#其他相关参数：" class="headerlink" title="其他相关参数："></a>其他相关参数：</h3></li>
+</ol>
+<ul>
+<li><strong>Auto expire</strong>：队列自动过期的时间。</li>
+<li><strong>Message TTL</strong>：设置消息的过期时间，消息在 TTL 到期后会被丢弃或进入死信队列。</li>
+<li><strong>Overflow behaviour</strong>：设置当队列达到最大长度时的行为。</li>
+<li><strong>Single active consumer</strong>：如果设置为 <code>true</code>，该队列只允许一个消费者进行消费。</li>
+<li><p><strong>Max length / Max length bytes</strong>：设置队列的最大长度或最大字节数，超出后会触发 <code>Overflow behaviour</code>。</p>
+<h2 id="分发消息策略"><a href="#分发消息策略" class="headerlink" title="分发消息策略"></a>分发消息策略</h2><h3 id="1-简单模式-Direct-Mode"><a href="#1-简单模式-Direct-Mode" class="headerlink" title="1. 简单模式 (Direct Mode)"></a>1. 简单模式 (Direct Mode)</h3></li>
+<li><p>特点：消息从生产者直接发送到队列，队列中的消费者接收消息进行处理。</p>
+</li>
+<li>使用场景：适用于简单的点对点通信，生产者与消费者直接交互。</li>
+<li>实现方式：生产者将消息发送到某个特定的队列，消费者从该队列中接收消息。</li>
+<li><p>特点：没有复杂的路由逻辑，简单高效，但不适合多消费者的场景。</p>
+<h3 id="2-工作队列模式-Work-Queue"><a href="#2-工作队列模式-Work-Queue" class="headerlink" title="2. 工作队列模式 (Work Queue)"></a>2. 工作队列模式 (Work Queue)</h3></li>
+<li><p>特点：生产者将消息发送到一个共享的队列，多个消费者从该队列中获取消息进行并行处理。</p>
+</li>
+<li>使用场景：适用于负载均衡，多个消费者共同处理任务，避免某个消费者负担过重。</li>
+<li>实现方式：所有消费者都监听同一个队列，RabbitMQ会以公平的方式将消息分发给消费者（即一个消费者处理一条消息，直到处理完才会继续接收新的消息）。</li>
+<li><p>特点：消费者可以并行处理任务，确保负载均衡和异步处理，适用于后台任务处理、分布式任务调度等。</p>
+<h3 id="3-发布订阅模式-Publish-Subscribe"><a href="#3-发布订阅模式-Publish-Subscribe" class="headerlink" title="3. 发布订阅模式 (Publish/Subscribe)"></a>3. 发布订阅模式 (Publish/Subscribe)</h3></li>
+<li><p>特点：生产者将消息发布到一个交换机（Exchange），然后多个消费者订阅该交换机，消费者将接收来自交换机的所有消息。</p>
+</li>
+<li>使用场景：适用于广播消息场景，例如日志收集、事件通知等。</li>
+<li>实现方式：生产者将消息发布到一个广播类型的交换机（如<code>fanout</code>交换机），交换机会将消息广播给所有绑定在其上的队列，所有消费者都会收到该消息。</li>
+<li><p>特点：通过交换机将消息发送到多个队列，实现多消费者接收消息，适用于需要广播的场景。</p>
+<h3 id="4-路由模式-Routing"><a href="#4-路由模式-Routing" class="headerlink" title="4. 路由模式 (Routing)"></a>4. 路由模式 (Routing)</h3></li>
+<li><p>特点：生产者将消息发送到交换机，并通过指定的路由键（Routing Key）来决定消息的去向。消费者根据路由键来决定是否接收消息。</p>
+</li>
+<li>使用场景：适用于根据消息的某些属性进行路由，灵活性较高，能够支持更多的消息传递场景。</li>
+<li>实现方式：使用<code>direct</code>交换机，生产者将消息发送到交换机，并指定路由键，交换机会根据路由键将消息转发给与该路由键匹配的队列。消费者通过监听特定的队列来接收消息。</li>
+<li>特点：灵活的消息路由机制，生产者与消费者通过路由键关联，可以将消息发送到特定的队列<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2></li>
+<li>Direct 消息通过交换机的路由键 存储到队列当中, 再由队列规则消费  </li>
+<li>需要知道的: 虚拟空间的名称, 账号密码, 交换机名字, 路由键, 队列名字 </li>
+<li>不需要知道的: 虚拟空间的创建, 交换机规则与类型, 队列类型<br><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/17401121492031740112141888.png" alt="17401121492031740112141888.png"></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://cloud3111.github.io">cloud3111</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://cloud3111.github.io/2025/02/17/RabbitMQ/">https://cloud3111.github.io/2025/02/17/RabbitMQ/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://cloud3111.github.io" target="_blank">朝圣者</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RabbitMQ/">RabbitMQ</a></div><div class="post-share"><div class="social-share" data-image="/img/3.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/02/24/ElasticSearch/" title="快速入门ElasticSearch"><img class="cover" src="/img/3.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">快速入门ElasticSearch</div></div><div class="info-2"><div class="info-item-1">快速入门ElasticSearch参考文献 ES的概念理解 ElasticSearch是一个分布式搜索引擎中间件, 用来过滤查找符合条件的数据, 也可以做日志统计、分析、系统监控等功能 kibana可以给我们提供一个elasticsearch的可视化界面: 5601 -&gt; 9200 es也是一种数据库, 它的语句叫DSL语句, 但是跟MySQL类型拥有聚合函数… 分词器的选用是es搜索的精髓 (创建索引 == 创建表)  (插入文档 == 插入表数据)   索引&gt;文档&gt;词条 将表数据要搜索的关键词根据分词器拆分成一个个词条, 然后将具有相同词条的数据编号记录下来, 当搜索条件与词条匹配时, 拿到对应的编号倒排索引 倒排索引的概念是基于MySQL这样的正向索引而言的,...</div></div></div></a><a class="pagination-related  no-desc" href="/2025/01/09/Template/hexoTemplate/" title=""><img class="cover" src="/img/wallpaper/view13.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2"></div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/github.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cloud3111</div><div class="author-info-description">我怜雪的洁白,却不喜冬日的寒冷</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cloud3111"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我说过 我不闪躲 我非要这么做 讲不听也偏要爱 更努力爱 让你明白 没有别条路能走 你决定要不要陪我 讲不听偏爱 看我感觉爱 等你的依赖~~</div></div><div class="card-widget" id="newYear"><div class="item-headline"><i></i><span></span></div><div class="item-content"><div id="newYear-main"><div class="mask"></div> <p class="title"></p> <div class="newYear-time"></div> <p class="today" style="text-align: right;"></p> </div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8RabbitMQ"><span class="toc-number">1.</span> <span class="toc-text">快速入门RabbitMQ</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="toc-number">1.1.</span> <span class="toc-text">什么是消息队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">消息队列的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.3.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E7%90%86%E8%A7%A3"><span class="toc-number">1.4.</span> <span class="toc-text">概念理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E9%94%AE%E4%B8%8E%E9%98%9F%E5%88%97%E7%9A%84%E7%BB%91%E5%AE%9A"><span class="toc-number">1.5.</span> <span class="toc-text">路由键与队列的绑定</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%BB%E4%BF%A1%E9%98%9F%E5%88%97"><span class="toc-number">1.6.</span> <span class="toc-text">死信队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%BB%E4%BF%A1%E5%8F%82%E6%95%B0%E6%B7%BB%E5%8A%A0%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="toc-number">1.6.1.</span> <span class="toc-text">死信参数添加步骤：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-number">1.6.2.</span> <span class="toc-text">其他相关参数：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%8F%91%E6%B6%88%E6%81%AF%E7%AD%96%E7%95%A5"><span class="toc-number">1.7.</span> <span class="toc-text">分发消息策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%AE%80%E5%8D%95%E6%A8%A1%E5%BC%8F-Direct-Mode"><span class="toc-number">1.7.1.</span> <span class="toc-text">1. 简单模式 (Direct Mode)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97%E6%A8%A1%E5%BC%8F-Work-Queue"><span class="toc-number">1.7.2.</span> <span class="toc-text">2. 工作队列模式 (Work Queue)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F-Publish-Subscribe"><span class="toc-number">1.7.3.</span> <span class="toc-text">3. 发布订阅模式 (Publish&#x2F;Subscribe)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%BC%8F-Routing"><span class="toc-number">1.7.4.</span> <span class="toc-text">4. 路由模式 (Routing)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.8.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/02/24/ElasticSearch/" title="快速入门ElasticSearch"><img src="/img/3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="快速入门ElasticSearch"/></a><div class="content"><a class="title" href="/2025/02/24/ElasticSearch/" title="快速入门ElasticSearch">快速入门ElasticSearch</a><time datetime="2025-02-24T10:46:00.000Z" title="发表于 2025-02-24 18:46:00">2025-02-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/17/RabbitMQ/" title="快速入门RabbitMQ"><img src="/img/3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="快速入门RabbitMQ"/></a><div class="content"><a class="title" href="/2025/02/17/RabbitMQ/" title="快速入门RabbitMQ">快速入门RabbitMQ</a><time datetime="2025-02-17T02:02:00.000Z" title="发表于 2025-02-17 10:02:00">2025-02-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/09/Template/hexoTemplate/" title="无标题"><img src="/img/wallpaper/view13.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无标题"/></a><div class="content"><a class="title" href="/2025/01/09/Template/hexoTemplate/" title="无标题">无标题</a><time datetime="2025-01-09T04:12:54.837Z" title="发表于 2025-01-09 12:12:54">2025-01-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/09/diary/2025-01-09/" title="无标题"><img src="/img/4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无标题"/></a><div class="content"><a class="title" href="/2025/01/09/diary/2025-01-09/" title="无标题">无标题</a><time datetime="2025-01-09T04:10:32.886Z" title="发表于 2025-01-09 12:10:32">2025-01-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/12/31/OptionalCheck/" title="网络请求预检(OptionalCheck)"><img src="/img/2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网络请求预检(OptionalCheck)"/></a><div class="content"><a class="title" href="/2024/12/31/OptionalCheck/" title="网络请求预检(OptionalCheck)">网络请求预检(OptionalCheck)</a><time datetime="2024-12-31T08:32:51.000Z" title="发表于 2024-12-31 16:32:51">2024-12-31</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/view.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By cloud3111</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script src="https://cdn.staticfile.org/jquery/3.6.3/jquery.min.js"></script><script async data-pjax src="https://cdn.wpon.cn/2022-sucai/Gold-ingot.js"></script><script async data-pjax src="/js/newYear.js"></script><script async src="https://cdn1.tianli0.top/npm/vue@2.6.14/dist/vue.min.js"></script><script async src="https://cdn1.tianli0.top/npm/element-ui@2.15.6/lib/index.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" data-title="本站采用多线部署，主线路托管于Vercel" title=""><img src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=flat&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="https://dashboard.4everland.org/index_generator" style="margin-inline:5px" data-title="本站采用多线部署，备用线路托管于4EVERLAND" title=""><img src="https://img.shields.io/badge/Hosted-4EVERLAND-22DDDD?style=flat&amp;logo=IPFS" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":200,"height":350},"mobile":{"show":false},"log":false});</script></body></html>
