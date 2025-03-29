@@ -1,0 +1,415 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>快速入门SpringCloud | 朝圣者</title><meta name="author" content="cloud3111"><meta name="copyright" content="cloud3111"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="快速入门SpringCloud微服务概述 核心是Spring框架，利用Spring Boot的自动配置，力图实现最简化的分布式应用程序开发 Spring Cloud 是基于 Spring Boot 实现的，它不能独立创建工程或模块，更不能脱离 Spring Boot 独立运行。 Spring Cloud 本身并不是一个拿来即可用的框架，它是一套微服务规范，共有两代实现 Spring Cloud N">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速入门SpringCloud">
+<meta property="og:url" content="https://cloud3111.github.io/2025/03/06/SpringCloud/index.html">
+<meta property="og:site_name" content="朝圣者">
+<meta property="og:description" content="快速入门SpringCloud微服务概述 核心是Spring框架，利用Spring Boot的自动配置，力图实现最简化的分布式应用程序开发 Spring Cloud 是基于 Spring Boot 实现的，它不能独立创建工程或模块，更不能脱离 Spring Boot 独立运行。 Spring Cloud 本身并不是一个拿来即可用的框架，它是一套微服务规范，共有两代实现 Spring Cloud N">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud3111.github.io/img/5.png">
+<meta property="article:published_time" content="2025-03-06T05:55:00.000Z">
+<meta property="article:modified_time" content="2025-03-28T06:53:33.389Z">
+<meta property="article:author" content="cloud3111">
+<meta property="article:tag" content="SpringCloud">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud3111.github.io/img/5.png"><link rel="shortcut icon" href="/img/favicon.con"><link rel="canonical" href="https://cloud3111.github.io/2025/03/06/SpringCloud/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '快速入门SpringCloud',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-28 14:53:33'
+}</script><link rel="stylesheet" href="/css/custom.css" ><link rel="stylesheet" href="https://cdn1.tianli0.top/npm/element-ui@2.15.6/packages/theme-chalk/lib/index.css"><link rel="stylesheet" href="//at.alicdn.com/t/c/font_4731132_c8skdswzyl.css" ><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/view1.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/github.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw iconfont icon-shouyeB"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw iconfont icon-yinle"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/movies/"><i class="fa-fw iconfont icon-064-moviesapp"></i><span> 电影</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw iconfont icon-xiangceB"></i><span> 图库</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw iconfont icon-biaoqian"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><i class="fa-fw iconfont icon-fenlei1"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw iconfont icon-wodeB"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/5.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/Smile.png" alt="Logo"><span class="site-name">朝圣者</span></a><a class="nav-page-title" href="/"><span class="site-name">快速入门SpringCloud</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw iconfont icon-shouyeB"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw iconfont icon-yinle"></i><span> 音乐</span></a></div><div class="menus_item"><a class="site-page" href="/movies/"><i class="fa-fw iconfont icon-064-moviesapp"></i><span> 电影</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw iconfont icon-xiangceB"></i><span> 图库</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw iconfont icon-biaoqian"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><i class="fa-fw iconfont icon-fenlei1"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw iconfont icon-wodeB"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">快速入门SpringCloud</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-06T05:55:00.000Z" title="发表于 2025-03-06 13:55:00">2025-03-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-28T06:53:33.389Z" title="更新于 2025-03-28 14:53:33">2025-03-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="快速入门SpringCloud"><a href="#快速入门SpringCloud" class="headerlink" title="快速入门SpringCloud"></a>快速入门SpringCloud</h1><h2 id="微服务概述"><a href="#微服务概述" class="headerlink" title="微服务概述"></a>微服务概述</h2><ul>
+<li>核心是Spring框架，利用Spring Boot的自动配置，力图实现最简化的分布式应用程序开发</li>
+<li>Spring Cloud 是基于 Spring Boot 实现的，它不能独立创建工程或模块，更不能脱离 Spring Boot 独立运行。</li>
+<li>Spring Cloud 本身并不是一个拿来即可用的框架，它是一套微服务规范，共有两代实现<ul>
+<li>Spring Cloud Netflix 是 Spring Cloud 的第一代实现，主要由 Eureka、Ribbon、Feign、Hystrix 等组件组成。</li>
+<li>Spring Cloud Alibaba 是 Spring Cloud 的第二代实现，主要由 Nacos、Sentinel、Seata 等组件组成。<h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2></li>
+</ul>
+</li>
+<li>RPC（Remote Procedure Call，远程过程调用）是一种分布式系统中的通信方式，允许不同的服务之间像调用本地方法一样调用远程服务</li>
+<li><p>HttpClient, OKHttp, RestTemplate 都是gRPC的典型HTTP请求客户端</p>
+<h4 id="为什么-WebFlux-使用-Netty-而不是-Tomcat？"><a href="#为什么-WebFlux-使用-Netty-而不是-Tomcat？" class="headerlink" title="为什么 WebFlux 使用 Netty 而不是 Tomcat？"></a>为什么 WebFlux 使用 Netty 而不是 Tomcat？</h4><p>  ✅ <strong>非阻塞 I/O</strong>，支持高并发请求<br>  ✅ <strong>事件驱动（Reactor 模式）</strong>，更适合 WebSockets、流式处理<br>  ✅ <strong>适用于 API 网关、微服务架构</strong>（如 Spring Cloud Gateway）</p>
+</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>调用方式</th>
+<th>描述</th>
+<th>场景</th>
+<th>优缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>同步调用(阻塞IO)</td>
+<td>客户端发送请求必须等待服务器返回结果, 如: Tomcat -&gt; SpringMVC -&gt; Servlet</td>
+<td>需要实时响应的业务，如支付、订单查询</td>
+<td>阻塞影响性能,但是满足业务需求</td>
+</tr>
+<tr>
+<td>异步调用(非阻塞IO)</td>
+<td>客户端发送请求后，不会阻塞等待，而是立即返回，后续通过回调函数、轮询或者事件通知的方式获取结果。如: WebFlux -&gt; Netty</td>
+<td>高并发、任务队列，如日志收集</td>
+<td>不等待需要管理回调或轮询</td>
+</tr>
+<tr>
+<td>单向调用</td>
+<td>客户端只发送请求，不关心返回值</td>
+<td>日志上报、监控数据</td>
+<td>高效,但是无法确认是否调用成功</td>
+</tr>
+<tr>
+<td>广播调用</td>
+<td>请求同时发送给多个服务器</td>
+<td>配置更新、消息通知</td>
+<td>需要策略控制（超时、重试等）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="Nacos"><a href="#Nacos" class="headerlink" title="Nacos"></a>Nacos</h2><ul>
+<li>Dynamic Naming and Configuration Service: <ul>
+<li>动态服务注册: discovery -&gt; 如果配置了 <code>spring.cloud.nacos.discovery</code> 服务就会在nacos上显示</li>
+<li>服务配置管理平台: 共享配置文件, 也可以自己书写在中心, 通过服务拉取到本地, 更强大的是可以自主刷新更新配置</li>
+<li>Nacos本身就是一个服务</li>
+</ul>
+</li>
+<li>命名空间nameSpace &gt; 组Group &gt; 服务DataID</li>
+<li><code>bootstrap.yaml</code> 里的配置会<strong>先于 <code>application.*</code> 被加载</strong>（适用于 Nacos 这种外部配置中心）。</li>
+<li><code>bootstrap.yaml</code> 会在某些 Spring Cloud 组件模块服务启动时 <strong>优先加载</strong>，如果配置了 <code>spring.cloud.nacos.discovery</code>, 就会**注册服务到已经启动的 Nacos 注册中心。</li>
+<li>尤其要注意的是所有注册到nacos的服务会自动吃到当前空间下的所有配置, 并且可以动态刷新</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/17412603872831741260386317.png" alt="17412603872831741260386317.png"></p>
+<h2 id="GateWay"><a href="#GateWay" class="headerlink" title="GateWay"></a>GateWay</h2><ul>
+<li>Spring Cloud Gateway是基于Netty的异步服务器，允许我们编写一系列过滤器来实现黑名单、权限检查、限流等功能。</li>
+<li>通过 Predicate 断言来实现 Route 路由的匹配规则。简单点说，Predicate 是路由转发的判断条件，请求只有满足了 Predicate 的条件，才会被转发到指定的服务上进行处理。</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>核心概念</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Route（路由）</td>
+<td>网关最基本的模块。它由一个 ID、一个目标 URI、一组断言（Predicate）和一组过滤器（Filter）组成。</td>
+</tr>
+<tr>
+<td>Predicate（断言）</td>
+<td>路由转发的判断条件，我们可以通过 Predicate 对 HTTP 请求进行匹配，例如请求方式、请求路径、请求头、参数等，如果请求与断言匹配成功，则将请求转发到相应的服务。</td>
+</tr>
+<tr>
+<td>Filter（过滤器）</td>
+<td>过滤器，我们可以使用它对请求进行拦截和修改，还可以使用它对上文的响应进行再处理。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/17412623069201741262305954.png" alt="17412623069201741262305954.png"></p>
+<h4 id="断言匹配规则"><a href="#断言匹配规则" class="headerlink" title="断言匹配规则"></a>断言匹配规则</h4><ul>
+<li>Route 路由与 Predicate 断言的对应关系为“一对多”，一个路由可以包含多个不同断言。</li>
+<li>一个请求想要转发到指定的路由上，就必须同时匹配路由上的所有断言。</li>
+<li>当一个请求同时满足多个路由的断言条件时，请求只会被首个成功匹配的路由转发。<br><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/17412433659841741243365893.png" alt="17412433659841741243365893.png"></li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>断言</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Path</td>
+<td>- Path=/dept/list/**</td>
+<td>当请求路径与 /dept/list/** 匹配时，该请求才能被转发到 <a target="_blank" rel="noopener" href="http://localhost:8001">http://localhost:8001</a> 上。</td>
+</tr>
+<tr>
+<td>Before</td>
+<td>- Before=2021-10-20T11:47:34.255+08:00[Asia/Shanghai]</td>
+<td>在 2021 年 10 月 20 日 11 时 47 分 34.255 秒之前的请求，才会被转发到 <a target="_blank" rel="noopener" href="http://localhost:8001">http://localhost:8001</a> 上。</td>
+</tr>
+<tr>
+<td>After</td>
+<td>- After=2021-10-20T11:47:34.255+08:00[Asia/Shanghai]</td>
+<td>在 2021 年 10 月 20 日 11 时 47 分 34.255 秒之后的请求，才会被转发到 <a target="_blank" rel="noopener" href="http://localhost:8001">http://localhost:8001</a> 上。</td>
+</tr>
+<tr>
+<td>Between</td>
+<td>- Between=2021-10-20T15:18:33.226+08:00[Asia/Shanghai],2021-10-20T15:23:33.226+08:00[Asia/Shanghai]</td>
+<td>在 2021 年 10 月 20 日 15 时 18 分 33.226 秒 到 2021 年 10 月 20 日 15 时 23 分 33.226 秒之间的请求，才会被转发到 <a target="_blank" rel="noopener" href="http://localhost:8001">http://localhost:8001</a> 服务器上。</td>
+</tr>
+<tr>
+<td>Cookie</td>
+<td>- Cookie=name,c.biancheng.net</td>
+<td>携带 Cookie 且 Cookie 的内容为 name=c.biancheng.net 的请求，才会被转发到 <a target="_blank" rel="noopener" href="http://localhost:8001">http://localhost:8001</a> 上。</td>
+</tr>
+<tr>
+<td>Header</td>
+<td>- Header=X-Request-Id,\d+</td>
+<td>请求头上携带属性 X-Request-Id 且属性值为整数的请求，才会被转发到 <a target="_blank" rel="noopener" href="http://localhost:8001">http://localhost:8001</a> 上。</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>- Method=GET</td>
+<td>只有 GET 请求才会被转发到 <a target="_blank" rel="noopener" href="http://localhost:8001">http://localhost:8001</a> 上。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="OpenForeign"><a href="#OpenForeign" class="headerlink" title="OpenForeign"></a>OpenForeign</h2><ul>
+<li>Spring Cloud OpenFeign把REST请求封装为Java接口方法，实现了一种声明式的RPC服务调用与负载均衡组件</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@FeignClient</td>
+<td>该注解用于通知 OpenFeign 组件对 @RequestMapping 注解下的接口进行解析，并通过动态代理的方式产生实现类，实现负载均衡和服务调用</td>
+</tr>
+<tr>
+<td>@EnableFeignClients</td>
+<td>该注解用于开启 OpenFeign 功能，当 Spring Cloud 应用启动, OpenFeign 会扫描标有 @FeignClient 注解的接口，生成代理并注册到 Spring 容器中</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="Seata"><a href="#Seata" class="headerlink" title="Seata"></a>Seata</h2><ul>
+<li>微服务下的分布式事务处理框架</li>
+<li>Seata的3个核心组件: TC,TM,RM</li>
+<li>TC 以 Seata 服务器（Server）形式独立部署，TM 和 RM 则是以 Seata Client 的形式集成在微服务中运行<br><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/17412609649171741260964467.png" alt="17412609649171741260964467.png"><h2 id="Sentinel"><a href="#Sentinel" class="headerlink" title="Sentinel"></a>Sentinel</h2></li>
+<li>是一种面向分布式微服务架构的轻量级高可用流量控制组件</li>
+<li>主要以流量为切入点，从流量控制、实时监控、熔断降级、系统负载保护等多个维度帮助用户保护服务的稳定性<h2 id="GateWay网关服务中集成springsecurity"><a href="#GateWay网关服务中集成springsecurity" class="headerlink" title="GateWay网关服务中集成springsecurity"></a>GateWay网关服务中集成springsecurity</h2></li>
+<li><strong>认证</strong>（就是账号密码）和<strong>授权</strong>（就是你能干啥）<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/17412622159201741262214989.png" alt="17412622159201741262214989.png"><img src="https://fastly.jsdelivr.net/gh/cloud3111/cloudWallpaper@main/17412624199221741262419741.png" alt="17412624199221741262419741.png"></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://cloud3111.github.io">cloud3111</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://cloud3111.github.io/2025/03/06/SpringCloud/">https://cloud3111.github.io/2025/03/06/SpringCloud/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://cloud3111.github.io" target="_blank">朝圣者</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringCloud/">SpringCloud</a></div><div class="post-share"><div class="social-share" data-image="/img/5.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/03/22/webDev/" title="web开发的踩坑避雷"><img class="cover" src="/img/view9.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">web开发的踩坑避雷</div></div><div class="info-2"><div class="info-item-1">Web开发总结axios 详解axiox 实例的创建12345678910111213141516171819202122import axios from &#x27;axios&#x27;; /* 创建 axios 实例的好处：  ✅ 可以配置默认 baseURL，避免重复写 API 地址✅ 可以添加请求/响应拦截器，统一处理 Token、错误消息等✅ 便于维护和管理多个 API 端点*/export function createAxiosInstance() &#123;    const axiosInstance = axios.create(&#123;        baseURL: process.env.VUE_APP_SERVER, // 替换为你的后端 API 地址        timeout: 5000, // 请求超时时间        withCredentials: true,  //允许跨域        headers: &#123;            &#x27;Content-Type&#x27;:...</div></div></div></a><a class="pagination-related" href="/2025/02/28/Obsidian/" title="obsidian-快速入门"><img class="cover" src="/img/4.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">obsidian-快速入门</div></div><div class="info-2"><div class="info-item-1">Obsidian今日待办事务如下  [ ] 今天是个好日子ctl + o: 切换  c + L: 待办 c + ; : 分割线 引用： c + p c + }]  引用 C + “‘ 代码块`` </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/github.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cloud3111</div><div class="author-info-description">我怜雪的洁白,却不喜冬日的寒冷</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cloud3111"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我说过 我不闪躲 我非要这么做 讲不听也偏要爱 更努力爱 让你明白 没有别条路能走 你决定要不要陪我 讲不听偏爱 看我感觉爱 等你的依赖~~</div></div><div class="card-widget" id="newYear"><div class="item-headline"><i></i><span></span></div><div class="item-content"><div id="newYear-main"><div class="mask"></div> <p class="title"></p> <div class="newYear-time"></div> <p class="today" style="text-align: right;"></p> </div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8SpringCloud"><span class="toc-number">1.</span> <span class="toc-text">快速入门SpringCloud</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">微服务概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC"><span class="toc-number">1.2.</span> <span class="toc-text">RPC</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-WebFlux-%E4%BD%BF%E7%94%A8-Netty-%E8%80%8C%E4%B8%8D%E6%98%AF-Tomcat%EF%BC%9F"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">为什么 WebFlux 使用 Netty 而不是 Tomcat？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos"><span class="toc-number">1.3.</span> <span class="toc-text">Nacos</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GateWay"><span class="toc-number">1.4.</span> <span class="toc-text">GateWay</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%AD%E8%A8%80%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">断言匹配规则</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenForeign"><span class="toc-number">1.5.</span> <span class="toc-text">OpenForeign</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Seata"><span class="toc-number">1.6.</span> <span class="toc-text">Seata</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sentinel"><span class="toc-number">1.7.</span> <span class="toc-text">Sentinel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GateWay%E7%BD%91%E5%85%B3%E6%9C%8D%E5%8A%A1%E4%B8%AD%E9%9B%86%E6%88%90springsecurity"><span class="toc-number">1.8.</span> <span class="toc-text">GateWay网关服务中集成springsecurity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.9.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/03/22/webDev/" title="web开发的踩坑避雷"><img src="/img/view9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="web开发的踩坑避雷"/></a><div class="content"><a class="title" href="/2025/03/22/webDev/" title="web开发的踩坑避雷">web开发的踩坑避雷</a><time datetime="2025-03-22T07:48:00.000Z" title="发表于 2025-03-22 15:48:00">2025-03-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/06/SpringCloud/" title="快速入门SpringCloud"><img src="/img/5.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="快速入门SpringCloud"/></a><div class="content"><a class="title" href="/2025/03/06/SpringCloud/" title="快速入门SpringCloud">快速入门SpringCloud</a><time datetime="2025-03-06T05:55:00.000Z" title="发表于 2025-03-06 13:55:00">2025-03-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/28/Obsidian/" title="obsidian-快速入门"><img src="/img/4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="obsidian-快速入门"/></a><div class="content"><a class="title" href="/2025/02/28/Obsidian/" title="obsidian-快速入门">obsidian-快速入门</a><time datetime="2025-02-28T03:29:59.000Z" title="发表于 2025-02-28 11:29:59">2025-02-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/24/ElasticSearch/" title="快速入门ElasticSearch"><img src="/img/view9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="快速入门ElasticSearch"/></a><div class="content"><a class="title" href="/2025/02/24/ElasticSearch/" title="快速入门ElasticSearch">快速入门ElasticSearch</a><time datetime="2025-02-24T10:46:00.000Z" title="发表于 2025-02-24 18:46:00">2025-02-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/17/RabbitMQ/" title="快速入门RabbitMQ"><img src="/img/view9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="快速入门RabbitMQ"/></a><div class="content"><a class="title" href="/2025/02/17/RabbitMQ/" title="快速入门RabbitMQ">快速入门RabbitMQ</a><time datetime="2025-02-17T02:02:00.000Z" title="发表于 2025-02-17 10:02:00">2025-02-17</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/view.png);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By cloud3111</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script src="https://cdn.staticfile.org/jquery/3.6.3/jquery.min.js"></script><script async data-pjax src="https://cdn.wpon.cn/2022-sucai/Gold-ingot.js"></script><script async data-pjax src="/js/newYear.js"></script><script async src="https://cdn1.tianli0.top/npm/vue@2.6.14/dist/vue.min.js"></script><script async src="https://cdn1.tianli0.top/npm/element-ui@2.15.6/lib/index.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" data-title="本站采用多线部署，主线路托管于Vercel" title=""><img src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=flat&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="https://dashboard.4everland.org/index_generator" style="margin-inline:5px" data-title="本站采用多线部署，备用线路托管于4EVERLAND" title=""><img src="https://img.shields.io/badge/Hosted-4EVERLAND-22DDDD?style=flat&amp;logo=IPFS" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":200,"height":350},"mobile":{"show":false},"log":false});</script></body></html>
